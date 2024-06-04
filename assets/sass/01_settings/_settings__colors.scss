@@ -1,0 +1,20 @@
+:root {
+  // #371F76 => hsl(257, 58%, 29%)
+  --primaryH: 257;
+  --primaryS: 58%;
+  --primaryL: 29%;
+  --primary-bg: white;
+  --secondaryH: 0;
+  --secondaryS: 0%;
+  --secondaryL: 13%;
+  --secondary-bg: white;
+  --font-family: Helvetica, Arial, sans-serif;
+  --font-size-root: 16px;
+  --font-weight-bolder: 700;
+  --font-weight-bold: 400;
+  --font-weight-normal: 200;
+  --font-weight-thin: 100;
+  --line-height: 1.75rem;
+  --heading-margin: 1.5rem 0 1rem;
+  --border-radius: 2px;
+}

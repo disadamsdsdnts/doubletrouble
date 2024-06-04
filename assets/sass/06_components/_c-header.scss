@@ -1,0 +1,21 @@
+.c-header {
+  background-color: hsl(var(--primaryH), var(--primaryS), var(--primaryL));
+  padding: 1rem;
+  border-radius: calc(var(--border-radius) * 6);
+
+  * {
+    color: white;
+    text-align: center;
+    max-width: none;
+  }
+
+  h1 {
+    font-weight: var(--font-weight-bolder);
+
+    span {
+      font-weight: var(--font-weight-normal);
+      display: block;
+      font-size: 50%;
+    }
+  }
+}

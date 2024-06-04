@@ -1,0 +1,27 @@
+.c-score {
+  margin-block: 2rem;
+
+  gap: 2rem;
+
+  @media (max-width: 767.9px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &__item {
+    border: 1px solid lightblue;
+    padding: 1rem 2rem;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: calc(var(--border-radius) * 6);
+  }
+}

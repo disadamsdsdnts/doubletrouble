@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doble Trouble por Adam Martin</title>
+  <link rel="stylesheet" href="/dist/almond.min.css" />
+  <!-- preload image -->
+  <link rel="preload" href="/dist/card-pattern.jpg" as="image" />
+</head>
+
+<body>
+  <main class=" c-main">
+    <div class="c-sidebar">
+      <header class="c-header">
+        <h1>DoubleTrouble <span>by Adan Martin</span></h1>
+        <p>El peor juego de la historia de buscar parejas. ¿Estás listo para denunciarme?</p>
+      </header>
+    </div>
+    <section class="c-content">
+      <div id="double-trouble">
+        <section class="c-setup" id="setup">
+          <h2>Antes de empezar</h2>
+
+          <div class="c-setup__row">
+            <ul>
+              <li>
+                El juego consiste en encontrar las parejas de colores iguales.
+              </li>
+              <li>
+                Para que el juego sea divertido, tiene que tener al menos 2 filas y 2 columnas. Esto hará que podamos
+                tener
+                parejas. Obvio.
+              </li>
+              <li>
+                Pulsa en una carta para darle la vuelta y ver su color. Si encuentras una pareja, se quedarán boca
+                arriba
+                y
+                ganarás puntos.
+              </li>
+              <li>
+                El tiempo es infinito, pero si quieres competir con alguien, te dejo un cronómetro para que te
+                diviertas.
+              </li>
+            </ul>
+            <form class="c-setup__form">
+              <fieldset>
+                <legend>
+                  Configuración del juego.
+                </legend>
+                <div class="c-setup__fields">
+                  <div class="c-setup__fieldset">
+                    <label for="game-cols">Columnas</label>
+                    <input type="number" id="game-cols" name="game-cols" required min="1" value="2" />
+                  </div>
+                  <div class="c-setup__fieldset">
+                    <label for="game-rows">Filas</label>
+                    <input type="number" id="game-rows" name="game-rows" required min="1" value="2" />
+                  </div>
+                </div>
+              </fieldset>
+              <button id="js-init-game">Empezar juego</button>
+            </form>
+          </div>
+        </section>
+
+
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
