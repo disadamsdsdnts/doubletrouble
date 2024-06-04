@@ -109,17 +109,15 @@ export default class DoubleTrouble {
 		/* Mostramos las cartas durante unos segundos */
 		this.updateScoreboard();
 
-		setTimeout(() => {
-			this.hideCards();
+		/* Actualizar el tablero */
+		this.updateBoard();
 
-			/* Iniciar el temporizador */
-			this.timer = setInterval(() => {
-				this.time++;
-				this.updateScoreboard();
-				this.saveGame();
-			}, 1000);
-
-		}, 2000);
+		/* Iniciar el temporizador */
+		this.timer = setInterval(() => {
+			this.time++;
+			this.updateScoreboard();
+			this.saveGame();
+		}, 1000);
 	}
 
 	resetGame() {
@@ -420,8 +418,8 @@ export default class DoubleTrouble {
 
 	deleteGame() {
 		if (localStorage.getItem('double-trouble')) {
-		localStorage.removeItem('double-trouble');
-	}
+			localStorage.removeItem('double-trouble');
+		}
 	}
 
 	getGame() {
