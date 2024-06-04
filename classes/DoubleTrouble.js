@@ -419,10 +419,12 @@ export default class DoubleTrouble {
 	}
 
 	deleteGame() {
+		if (localStorage.getItem('double-trouble')) {
 		localStorage.removeItem('double-trouble');
+	}
 	}
 
 	getGame() {
-		return JSON.parse(localStorage.getItem('double-trouble'));
+		return localStorage.getItem('double-trouble') ? JSON.parse(localStorage.getItem('double-trouble')) : false;
 	}
 }
