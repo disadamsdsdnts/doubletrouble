@@ -24,19 +24,21 @@ export default class DoubleTrouble {
 
 			console.log('[restart] status', status)
 
-			for (let i = 0; i < status.rows; i++) {
-				newBoardStatus[i] = [];
+			console.log('[restart] status.boardStatus', status.boardStatus)
 
-				for (let j = 0; j < status.cols; j++) {
-					let currentCard = new DoubleTroubleCard(i, j);
+			status.boardStatus.forEach(row => {
+				row.forEach(card => {
+					let newCard = new DoubleTroubleCard(card.row, card.col);
+					newCard.setColor(card.color);
+					newCard.setVisible(card.visible);
+					newCard.setLocked(card.locked);
 
-					currentCard.setVisible(status.boardStatus[i][j].visible);
-					currentCard.setLocked(status.boardStatus[i][j].locked);
-					currentCard.setColor(status.boardStatus[i][j].color);
+					newBoardStatus[card.row] = newBoardStatus[card.row] || [];
+					newBoardStatus[card.row][card.col] = newCard;
+				});
+			});
 
-					newBoardStatus[i][j] = currentCard;
-				}
-			}
+			console.log('[restart] newBoardStatus', newBoardStatus)
 
 			this.boardStatus = newBoardStatus;
 
@@ -46,6 +48,15 @@ export default class DoubleTrouble {
 			this.cols = status.cols;
 			this.rows = status.rows;
 		}
+
+		// Generar las cartas en el tablero
+		this.boardStatus.forEach(row => {
+			row.forEach(card => {
+				this.generateCard(card.row, card.col, card.color);
+			});
+		});
+
+		this.createBoard();
 
 		this.startGame();
 	}
@@ -63,7 +74,7 @@ export default class DoubleTrouble {
 			return;
 		}
 
-		this.startGame();
+		this.prepareGame();
 	}
 
 	updateRows(rows) {
@@ -97,10 +108,16 @@ export default class DoubleTrouble {
 		return true;
 	}
 
-	startGame() {
+	prepareGame() {
 		this.gameStatus = 'playing';
 
 		/* Creamos el tablero si no existe previamente */
+		this.generateBoard();
+
+		this.startGame();
+	}
+
+	startGame() {
 		this.createBoard();
 
 		/* Mostramos el tablero */
@@ -146,8 +163,10 @@ export default class DoubleTrouble {
 		// Reiniciar el contador de tiempo
 		this.time = 0;
 
-		//
+		// Eliminar el juego guardado
+		this.deleteGame();
 
+		// Mostrar el configurador
 		this.showSetup();
 	}
 
@@ -165,6 +184,10 @@ export default class DoubleTrouble {
 			// Añadir el tablero después del setup
 			document.querySelector('#double-trouble #setup').insertAdjacentElement('afterend', board);
 		}
+	}
+
+	generateBoard() {
+		this.createBoard();
 
 		// Generar los colores
 		let colors = this.generateColors();
@@ -180,44 +203,54 @@ export default class DoubleTrouble {
 			this.boardStatus[i] = [];
 
 			for (let j = 0; j < this.cols; j++) {
-				let currentCard = new DoubleTroubleCard(i, j);
 				let color = colors[i * this.cols + j];
-				currentCard.setColor(color);
 
-				let card = document.createElement('div');
-				card.classList.add('c-card');
-				card.dataset.row = currentCard.getRow();
-				card.dataset.col = currentCard.getCol();
-				card.style.backgroundColor = currentCard.getColor();
-				card.dataset.visible = currentCard.getVisible();
-				card.dataset.locked = currentCard.getLocked();
-
-				// add two divs to the card
-				let front = document.createElement('div');
-				front.classList.add('c-card__front');
-				card.appendChild(front);
-
-				let back = document.createElement('div');
-				back.classList.add('c-card__back');
-				card.appendChild(back);
-
-				card.addEventListener('click', ev => {
-					this.countClick();
-
-					if (ev.target.classList.contains('c-card')) {
-						console.log('[createBoard] card clicked', ev.target)
-						this.flipCard(ev.target);
-					} else {
-						console.log('[createBoard] card clicked', ev.target.closest('.c-card'))
-						this.flipCard(ev.target.closest('.c-card'));
-					}
-				});
-
-				document.querySelector('#double-trouble #board').appendChild(card);
+				let currentCard = this.generateCard(i, j, color);
 
 				this.boardStatus[i][j] = currentCard
 			}
 		}
+	}
+
+	generateCard(row, col, color) {
+		let currentCard = new DoubleTroubleCard(row, col);
+
+		currentCard.setColor(color);
+
+		let card = document.createElement('div');
+		card.classList.add('c-card');
+		card.dataset.row = currentCard.getRow();
+		card.dataset.col = currentCard.getCol();
+		card.style.backgroundColor = currentCard.getColor();
+		card.dataset.visible = currentCard.getVisible();
+		card.dataset.locked = currentCard.getLocked();
+
+		// add two divs to the card
+		let front = document.createElement('div');
+		front.classList.add('c-card__front');
+		card.appendChild(front);
+
+		let back = document.createElement('div');
+		back.classList.add('c-card__back');
+		card.appendChild(back);
+
+		card.addEventListener('click', ev => {
+			this.countClick();
+
+			if (ev.target.classList.contains('c-card')) {
+				console.log('[createBoard] card clicked', ev.target)
+				this.flipCard(ev.target);
+			} else {
+				console.log('[createBoard] card clicked', ev.target.closest('.c-card'))
+				this.flipCard(ev.target.closest('.c-card'));
+			}
+		});
+
+		this.createBoard();
+
+		document.querySelector('#double-trouble #board').appendChild(card);
+
+		return currentCard;
 	}
 
 	updateScoreboard() {
@@ -274,7 +307,7 @@ export default class DoubleTrouble {
 		let col = parseInt(card.dataset.col);
 
 		// Comprobamos si la carta está bloqueada
-		if (this.boardStatus[row][col].getLocked()) {
+		if (this.boardStatus[row][col].getLocked() === true) {
 			return;
 		}
 
@@ -302,6 +335,12 @@ export default class DoubleTrouble {
 					this.updateBoard();
 				}, 1000);
 			}
+		} else if (visibleCards.length > 2) {
+			visibleCards.forEach(card => {
+				if (card.getLocked() === false) {
+					card.setVisible(false);
+				}
+			});
 		}
 
 		this.updateBoard();
@@ -337,8 +376,13 @@ export default class DoubleTrouble {
 	}
 
 	showBoard() {
-		document.querySelector('#double-trouble #setup').classList.add('hidden');
-		document.querySelector('#double-trouble #board').classList.remove('hidden');
+		if (document.querySelector('#double-trouble #setup')) {
+			document.querySelector('#double-trouble #setup').classList.add('hidden');
+		}
+
+		if (document.querySelector('#double-trouble #board')) {
+			document.querySelector('#double-trouble #board').classList.remove('hidden');
+		}
 	}
 
 	showSetup() {
